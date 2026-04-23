@@ -1,156 +1,284 @@
 <div class="app-shell">
 
+  <!-- Header -->
   <header class="app-header">
     <span class="header-icon">✦</span>
-    <h1>ThangaKanakku</h1>
+    <h1>Thanga Kanakku</h1>
     <span class="header-sub">தங்கக் கணக்கு</span>
   </header>
 
-  <main class="calculator" [formGroup]="form">
+  <!-- Tab bar -->
+  <mat-tab-group
+    animationDuration="200ms"
+    class="gold-tabs">
 
-    <!-- Weight + Rate -->
-    <div class="row-2">
-      <mat-form-field appearance="fill" class="full-width">
-        <mat-label>Gold weight (g)</mat-label>
-        <input matInput type="number" inputmode="decimal"
-          formControlName="grossWeight" placeholder="e.g. 8.500"/>
-        <mat-error *ngIf="isInvalid('grossWeight')">Enter valid weight</mat-error>
-      </mat-form-field>
+    <!-- ────────── TAB 1: CALCULATE ────────── -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tab-label">🧮 Calculate</span>
+      </ng-template>
 
-      <mat-form-field appearance="fill" class="full-width">
-        <mat-label>Gold rate (₹/g)</mat-label>
-        <input matInput type="number" inputmode="decimal"
-          formControlName="goldRate" placeholder="e.g. 6200"/>
-        <mat-error *ngIf="isInvalid('goldRate')">Enter valid rate</mat-error>
-      </mat-form-field>
-    </div>
+      <div class="tab-body" [formGroup]="calcForm">
 
-    <!-- Making Charge Type — Fixed first -->
-    <div class="field-group">
-      <span class="seg-label">Making charge type</span>
-      <div class="seg-control">
-        <button type="button" matRipple
-          [class.active]="makingType === 'fixed'"
-          (click)="setMakingType('fixed')">
-          ₹ Fixed / gram
-        </button>
-        <button type="button" matRipple
-          [class.active]="makingType === 'percent'"
-          (click)="setMakingType('percent')">
-          % Percent
-        </button>
+        <div class="row-2">
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Gold weight (g)</mat-label>
+            <input matInput type="number" inputmode="decimal"
+              formControlName="grossWeight" placeholder="e.g. 8.500"/>
+            <mat-error *ngIf="isInvalid(calcForm,'grossWeight')">
+              Enter valid weight
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Gold rate (₹/g)</mat-label>
+            <input matInput type="number" inputmode="decimal"
+              formControlName="goldRate" placeholder="e.g. 6200"/>
+            <mat-error *ngIf="isInvalid(calcForm,'goldRate')">
+              Enter valid rate
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Making type -->
+        <div class="field-group">
+          <span class="seg-label">Making charge type</span>
+          <div class="seg-control">
+            <button type="button" matRipple
+              [class.active]="makingMode === 'fixed'"
+              (click)="setMakingMode('fixed')">
+              ₹ Fixed / gram
+            </button>
+            <button type="button" matRipple
+              [class.active]="makingMode === 'percent'"
+              (click)="setMakingMode('percent')">
+              % Percent
+            </button>
+          </div>
+        </div>
+
+        <mat-form-field appearance="fill" class="full-width"
+          *ngIf="makingMode === 'fixed'">
+          <mat-label>Making charge (₹ per gram)</mat-label>
+          <input matInput type="number" inputmode="decimal"
+            formControlName="makingFixed" placeholder="e.g. 450"/>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width"
+          *ngIf="makingMode === 'percent'">
+          <mat-label>Making charge (%)</mat-label>
+          <input matInput type="number" inputmode="decimal"
+            formControlName="makingPercent" placeholder="e.g. 12"/>
+        </mat-form-field>
+
+        <!-- GST toggle -->
+        <div class="gst-toggle-row">
+          <div class="gst-toggle-label">
+            <span class="gst-title">Include GST</span>
+            <span class="gst-hint">3% on gold + making</span>
+          </div>
+          <mat-slide-toggle formControlName="includeGst"
+            class="gold-toggle">
+          </mat-slide-toggle>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-calc" type="button" matRipple (click)="calculate()">
+            Calculate
+          </button>
+          <button class="btn-reset" type="button" matRipple (click)="reset()">
+            Reset
+          </button>
+        </div>
+
+        <!-- Price breakup -->
+        <div class="results-card" *ngIf="calcResult">
+          <div class="card-title">Price Breakup</div>
+
+          <div class="breakup-row">
+            <div class="breakup-left">
+              <span class="breakup-label">Gold value</span>
+              <span class="breakup-formula">{{ calcResult.goldFormula }}</span>
+            </div>
+            <span class="breakup-amount">
+              ₹ {{ calcResult.goldValue | number:'1.2-2' }}
+            </span>
+          </div>
+
+          <div class="breakup-row">
+            <div class="breakup-left">
+              <span class="breakup-label">Making charge</span>
+              <span class="breakup-formula">{{ calcResult.makingFormula }}</span>
+            </div>
+            <span class="breakup-amount">
+              ₹ {{ calcResult.makingCharge | number:'1.2-2' }}
+            </span>
+          </div>
+
+          <div class="breakup-row">
+            <div class="breakup-left">
+              <span class="breakup-label">Subtotal</span>
+              <span class="breakup-formula">Gold + Making</span>
+            </div>
+            <span class="breakup-amount">
+              ₹ {{ calcResult.subtotal | number:'1.2-2' }}
+            </span>
+          </div>
+
+          <div class="breakup-row" *ngIf="includeGst">
+            <div class="breakup-left">
+              <span class="breakup-label">GST (3%)</span>
+              <span class="breakup-formula">{{ calcResult.gstFormula }}</span>
+            </div>
+            <span class="breakup-amount gst-amount">
+              + ₹ {{ calcResult.gst | number:'1.2-2' }}
+            </span>
+          </div>
+
+          <div class="result-divider"></div>
+
+          <div class="total-row">
+            <div class="total-left">
+              <span class="total-label">Your fair price</span>
+              <span class="total-hint" *ngIf="!includeGst">GST not included</span>
+            </div>
+            <span class="total-amount">
+              ₹ {{ calcResult.totalPrice | number:'1.2-2' }}
+            </span>
+          </div>
+        </div>
+
       </div>
-    </div>
+    </mat-tab>
 
-    <!-- Fixed per gram -->
-    <mat-form-field appearance="fill" class="full-width"
-      *ngIf="makingType === 'fixed'">
-      <mat-label>Making charge (₹ per gram)</mat-label>
-      <input matInput type="number" inputmode="decimal"
-        formControlName="makingFixed" placeholder="e.g. 450"/>
-    </mat-form-field>
+    <!-- ────────── TAB 2: BARGAIN ────────── -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tab-label">🤝 Bargain</span>
+      </ng-template>
 
-    <!-- Percent -->
-    <mat-form-field appearance="fill" class="full-width"
-      *ngIf="makingType === 'percent'">
-      <mat-label>Making charge (%)</mat-label>
-      <input matInput type="number" inputmode="decimal"
-        formControlName="makingPercent" placeholder="e.g. 12"/>
-    </mat-form-field>
+      <div class="tab-body">
 
-    <!-- GST Toggle -->
-    <div class="gst-toggle-row">
-      <div class="gst-toggle-label">
-        <span class="gst-title">Include GST</span>
-        <span class="gst-hint">3% on gold value + making charge</span>
+        <!-- No calculation yet -->
+        <div class="no-calc-msg" *ngIf="!calcResult">
+          <span class="no-calc-icon">🧮</span>
+          <p>Calculate your fair price first in the <strong>Calculate</strong> tab</p>
+        </div>
+
+        <!-- Has calculation -->
+        <ng-container *ngIf="calcResult" [formGroup]="bargainForm">
+
+          <!-- Fair price display -->
+          <div class="fair-price-card">
+            <span class="fair-price-label">Your calculated fair price</span>
+            <span class="fair-price-amount">
+              ₹ {{ calcResult.totalPrice | number:'1.2-2' }}
+            </span>
+          </div>
+
+          <!-- Shop price input -->
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Shopkeeper's quoted price (₹)</mat-label>
+            <input matInput type="number" inputmode="decimal"
+              formControlName="shopPrice" placeholder="e.g. 58000"/>
+            <mat-error *ngIf="isInvalid(bargainForm,'shopPrice')">
+              Enter shop price
+            </mat-error>
+          </mat-form-field>
+
+          <button class="btn-calc" type="button" matRipple
+            (click)="compareBargain()">
+            Compare & Analyse
+          </button>
+
+          <!-- Bargain result -->
+          <ng-container *ngIf="bargainResult">
+
+            <!-- Difference card -->
+            <div class="diff-card"
+              [class.overpaying]="bargainResult.isOverpaying"
+              [class.good-deal]="!bargainResult.isOverpaying">
+
+              <div class="diff-header">
+                <span class="diff-icon">
+                  {{ bargainResult.isOverpaying ? '⚠️' : '✅' }}
+                </span>
+                <span class="diff-title">
+                  {{ bargainResult.isOverpaying ? 'YOU ARE OVERPAYING' : 'GOOD DEAL!' }}
+                </span>
+              </div>
+
+              <div class="diff-amount">
+                ₹ {{ (bargainResult.difference | number:'1.2-2') }}
+              </div>
+              <div class="diff-sub">
+                {{ bargainResult.isOverpaying
+                  ? 'More than your fair price'
+                  : 'Less than your estimate — great deal!' }}
+              </div>
+            </div>
+
+            <!-- Comparison table -->
+            <div class="results-card">
+              <div class="card-title">Comparison</div>
+
+              <div class="breakup-row">
+                <div class="breakup-left">
+                  <span class="breakup-label">Shop price</span>
+                </div>
+                <span class="breakup-amount">
+                  ₹ {{ bargainResult.shopPrice | number:'1.2-2' }}
+                </span>
+              </div>
+
+              <div class="breakup-row">
+                <div class="breakup-left">
+                  <span class="breakup-label">Your fair price</span>
+                </div>
+                <span class="breakup-amount">
+                  ₹ {{ bargainResult.fairPrice | number:'1.2-2' }}
+                </span>
+              </div>
+
+              <div class="breakup-row">
+                <div class="breakup-left">
+                  <span class="breakup-label">Implied making charge</span>
+                  <span class="breakup-formula">Shop price − gold value</span>
+                </div>
+                <span class="breakup-amount">
+                  ₹ {{ bargainResult.impliedMaking | number:'1.2-2' }}
+                </span>
+              </div>
+
+              <div class="breakup-row">
+                <div class="breakup-left">
+                  <span class="breakup-label">Difference</span>
+                </div>
+                <span class="breakup-amount"
+                  [class.overpay-text]="bargainResult.isOverpaying"
+                  [class.saving-text]="!bargainResult.isOverpaying">
+                  {{ bargainResult.isOverpaying ? '+' : '-' }}
+                  ₹ {{ (bargainResult.difference | number:'1.2-2') }}
+                  <span class="diff-badge"
+                    [class.badge-red]="bargainResult.isOverpaying"
+                    [class.badge-green]="!bargainResult.isOverpaying">
+                    {{ bargainResult.isOverpaying ? 'Overcharge' : 'Saving' }}
+                  </span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Bargain tip -->
+            <div class="bargain-tip">
+              <span class="tip-icon">💡</span>
+              {{ bargainResult.tip }}
+            </div>
+
+          </ng-container>
+        </ng-container>
       </div>
-      <mat-slide-toggle
-        formControlName="includeGst"
-        color="primary">
-      </mat-slide-toggle>
-    </div>
+    </mat-tab>
 
-    <!-- Action Buttons -->
-    <div class="btn-row">
-      <button class="btn-calc" type="button" matRipple (click)="calculate()">
-        Calculate
-      </button>
-      <button class="btn-reset" type="button" matRipple (click)="reset()">
-        Reset
-      </button>
-    </div>
+  </mat-tab-group>
 
-    <!-- Price Breakup -->
-    <div class="results" *ngIf="result">
-      <div class="results-title">Price Breakup</div>
-
-      <!-- Gold Value -->
-      <div class="breakup-row">
-        <div class="breakup-left">
-          <span class="breakup-label">Gold value</span>
-          <span class="breakup-formula">{{ result.goldFormula }}</span>
-        </div>
-        <div class="breakup-right">
-          <span class="breakup-amount">
-            ₹ {{ result.goldValue | number:'1.2-2' }}
-          </span>
-        </div>
-      </div>
-
-      <!-- Making Charge -->
-      <div class="breakup-row">
-        <div class="breakup-left">
-          <span class="breakup-label">Making charge</span>
-          <span class="breakup-formula">{{ result.makingFormula }}</span>
-        </div>
-        <div class="breakup-right">
-          <span class="breakup-amount">
-            ₹ {{ result.makingCharge | number:'1.2-2' }}
-          </span>
-        </div>
-      </div>
-
-      <!-- Subtotal -->
-      <div class="breakup-row">
-        <div class="breakup-left">
-          <span class="breakup-label">Subtotal</span>
-          <span class="breakup-formula">Gold value + Making charge</span>
-        </div>
-        <div class="breakup-right">
-          <span class="breakup-amount">
-            ₹ {{ result.subtotal | number:'1.2-2' }}
-          </span>
-        </div>
-      </div>
-
-      <!-- GST row — only shown when toggle is ON -->
-      <div class="breakup-row" *ngIf="includeGst">
-        <div class="breakup-left">
-          <span class="breakup-label">GST (3%)</span>
-          <span class="breakup-formula">{{ result.gstFormula }}</span>
-        </div>
-        <div class="breakup-right">
-          <span class="breakup-amount gst-amount">
-            + ₹ {{ result.gst | number:'1.2-2' }}
-          </span>
-        </div>
-      </div>
-
-      <!-- Divider -->
-      <div class="result-divider"></div>
-
-      <!-- Total -->
-      <div class="total-row">
-        <div class="total-left">
-          <span class="total-label">Total price</span>
-          <span class="total-hint" *ngIf="!includeGst">GST not included</span>
-        </div>
-        <span class="total-amount">
-          ₹ {{ result.totalPrice | number:'1.2-2' }}
-        </span>
-      </div>
-
-    </div>
-
-  </main>
 </div>

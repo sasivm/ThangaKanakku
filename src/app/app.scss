@@ -1,3 +1,4 @@
+// ── Shell ──────────────────────────────────────────
 .app-shell {
   max-width: 480px;
   margin: 0 auto;
@@ -7,7 +8,7 @@
   flex-direction: column;
 }
 
-/* Header */
+// ── Header ─────────────────────────────────────────
 .app-header {
   background: linear-gradient(135deg, #1A1200, #2E2200);
   border-bottom: 1px solid var(--gold-dark);
@@ -18,20 +19,38 @@
 .app-header h1 { color: var(--gold-light); font-size: 22px; font-weight: 700; letter-spacing: 1.5px; }
 .header-sub   { color: var(--gold-dark); font-size: 13px; margin-top: 2px; display: block; }
 
-/* Body */
-.calculator { padding: 20px 16px; flex: 1; }
+// ── Gold tab bar override ───────────────────────────
+.gold-tabs {
+  .mat-mdc-tab-header {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  .mat-mdc-tab .mdc-tab__text-label {
+    color: var(--on-surface2);
+  }
+  .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+    color: var(--gold) !important;
+  }
+  .mdc-tab-indicator__content--underline {
+    border-color: var(--gold) !important;
+  }
+  .mat-mdc-tab-body-wrapper {
+    background: var(--surface);
+  }
+}
 
-/* 2 column row */
+.tab-label { font-size: 14px; font-weight: 500; }
+.tab-body  { padding: 20px 16px; }
+
+// ── Form layout ────────────────────────────────────
 .row-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
+.full-width  { width: 100%; margin-bottom: 8px; }
+.field-group { margin-bottom: 20px; }
 
-.full-width   { width: 100%; margin-bottom: 8px; }
-.field-group  { margin-bottom: 20px; }
-
-/* Segment label */
 .seg-label {
   display: block;
   font-size: 11px;
@@ -42,7 +61,6 @@
   margin-bottom: 8px;
 }
 
-/* Segment control */
 .seg-control {
   display: flex;
   background: var(--surface2);
@@ -50,27 +68,28 @@
   border-radius: 8px;
   padding: 3px;
   gap: 3px;
-}
-.seg-control button {
-  flex: 1;
-  padding: 10px 6px;
-  font-size: 14px;
-  font-weight: 500;
-  border: none;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--on-surface2);
-  cursor: pointer;
-  transition: all 0.2s;
 
-  &.active {
-    background: var(--gold);
-    color: #1A1200;
-    font-weight: 700;
+  button {
+    flex: 1;
+    padding: 10px 6px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--on-surface2);
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &.active {
+      background: var(--gold);
+      color: #1A1200;
+      font-weight: 700;
+    }
   }
 }
 
-/* GST Toggle row */
+// ── GST toggle row ─────────────────────────────────
 .gst-toggle-row {
   display: flex;
   align-items: center;
@@ -81,15 +100,28 @@
   padding: 12px 16px;
   margin-bottom: 24px;
 }
-.gst-toggle-label  { display: flex; flex-direction: column; gap: 2px; }
-.gst-title         { font-size: 15px; font-weight: 500; color: var(--on-surface); }
-.gst-hint          { font-size: 12px; color: var(--on-surface2); }
+.gst-toggle-label { display: flex; flex-direction: column; gap: 2px; }
+.gst-title { font-size: 15px; font-weight: 500; color: var(--on-surface); }
+.gst-hint  { font-size: 12px; color: var(--on-surface2); }
 
-/* Buttons */
+// Gold slide toggle override
+.gold-toggle {
+  --mdc-switch-selected-track-color:          var(--gold) !important;
+  --mdc-switch-selected-hover-track-color:    var(--gold-light) !important;
+  --mdc-switch-selected-pressed-track-color:  var(--gold-dark) !important;
+  --mdc-switch-selected-focus-track-color:    var(--gold) !important;
+  --mdc-switch-selected-handle-color:         #1A1200 !important;
+  --mdc-switch-selected-hover-handle-color:   #1A1200 !important;
+  --mdc-switch-selected-pressed-handle-color: #1A1200 !important;
+  --mdc-switch-selected-focus-handle-color:   #1A1200 !important;
+}
+
+// ── Buttons ────────────────────────────────────────
 .btn-row { display: flex; gap: 10px; margin-bottom: 20px; }
 
 .btn-calc {
   flex: 2;
+  width: 100%;
   padding: 16px;
   background: var(--gold);
   color: #1A1200;
@@ -98,7 +130,7 @@
   font-size: 17px;
   font-weight: 700;
   cursor: pointer;
-  letter-spacing: 0.3px;
+  margin-bottom: 16px;
 }
 .btn-reset {
   flex: 1;
@@ -112,14 +144,15 @@
   cursor: pointer;
 }
 
-/* Results card */
-.results {
+// ── Results card ───────────────────────────────────
+.results-card {
   background: var(--surface2);
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 16px;
+  margin-bottom: 16px;
 }
-.results-title {
+.card-title {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -128,24 +161,21 @@
   margin-bottom: 4px;
 }
 
-/* Breakup rows */
+// ── Breakup rows ───────────────────────────────────
 .breakup-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   padding: 12px 0;
   border-bottom: 1px solid var(--border);
-
-  &:first-of-type { padding-top: 8px; }
+  &:last-child { border-bottom: none; }
 }
-.breakup-left   { display: flex; flex-direction: column; gap: 3px; flex: 1; }
-.breakup-label  { font-size: 14px; color: var(--on-surface); font-weight: 500; }
+.breakup-left    { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+.breakup-label   { font-size: 14px; color: var(--on-surface); font-weight: 500; }
 .breakup-formula { font-size: 11px; color: var(--on-surface2); }
-.breakup-right  { padding-left: 12px; }
-.breakup-amount { font-size: 15px; font-weight: 600; color: var(--on-surface); white-space: nowrap; }
-.gst-amount     { color: var(--gold); }
+.breakup-amount  { font-size: 15px; font-weight: 600; color: var(--on-surface); white-space: nowrap; padding-left: 12px; }
+.gst-amount      { color: var(--gold); }
 
-/* Divider */
 .result-divider {
   height: 1px;
   background: var(--gold-dark);
@@ -153,13 +183,86 @@
   margin: 8px 0 12px;
 }
 
-/* Total row */
-.total-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+.total-row    { display: flex; justify-content: space-between; align-items: center; }
 .total-left   { display: flex; flex-direction: column; gap: 2px; }
 .total-label  { font-size: 16px; font-weight: 600; color: var(--on-surface); }
 .total-hint   { font-size: 11px; color: var(--on-surface2); }
 .total-amount { font-size: 22px; font-weight: 700; color: var(--gold-light); }
+
+// ── Bargain tab ────────────────────────────────────
+.no-calc-msg {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--on-surface2);
+
+  .no-calc-icon { font-size: 40px; display: block; margin-bottom: 12px; }
+  p { font-size: 15px; line-height: 1.6; }
+  strong { color: var(--gold); }
+}
+
+.fair-price-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface3);
+  border: 1px solid var(--gold-dark);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+.fair-price-label  { font-size: 13px; color: var(--on-surface2); }
+.fair-price-amount { font-size: 18px; font-weight: 700; color: var(--gold-light); }
+
+// Diff card
+.diff-card {
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 16px;
+
+  &.overpaying {
+    background: rgba(207, 102, 121, 0.12);
+    border: 1px solid rgba(207, 102, 121, 0.4);
+    .diff-title  { color: #CF6679; }
+    .diff-amount { color: #CF6679; }
+  }
+
+  &.good-deal {
+    background: rgba(76, 175, 80, 0.12);
+    border: 1px solid rgba(76, 175, 80, 0.4);
+    .diff-title  { color: #4CAF50; }
+    .diff-amount { color: #4CAF50; }
+  }
+}
+.diff-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.diff-icon   { font-size: 20px; }
+.diff-title  { font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+.diff-amount { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+.diff-sub    { font-size: 12px; color: var(--on-surface2); }
+
+.overpay-text { color: #CF6679; }
+.saving-text  { color: #4CAF50; }
+
+.diff-badge {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 600;
+  margin-left: 6px;
+  vertical-align: middle;
+
+  &.badge-red   { background: rgba(207,102,121,0.15); color: #CF6679; border: 1px solid rgba(207,102,121,0.4); }
+  &.badge-green { background: rgba(76,175,80,0.15);  color: #4CAF50; border: 1px solid rgba(76,175,80,0.4);  }
+}
+
+.bargain-tip {
+  background: var(--surface3);
+  border: 1px solid var(--gold-dark);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 13px;
+  color: var(--on-surface2);
+  line-height: 1.7;
+
+  .tip-icon { margin-right: 6px; }
+}
