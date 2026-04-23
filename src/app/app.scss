@@ -117,11 +117,17 @@
 }
 
 // ── Buttons ────────────────────────────────────────
-.btn-row { display: flex; gap: 10px; margin-bottom: 20px; }
+.btn-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: stretch;
+}
 
 .btn-calc {
   flex: 2;
   width: 100%;
+  min-height: 56px;
   padding: 16px;
   background: var(--gold);
   color: #1A1200;
@@ -130,10 +136,10 @@
   font-size: 17px;
   font-weight: 700;
   cursor: pointer;
-  margin-bottom: 16px;
 }
 .btn-reset {
   flex: 1;
+  min-height: 56px;
   padding: 16px;
   background: var(--surface3);
   color: var(--on-surface2);
@@ -220,6 +226,7 @@
   margin-bottom: 16px;
 
   &.overpaying {
+    margin: 15px 0;
     background: rgba(207, 102, 121, 0.12);
     border: 1px solid rgba(207, 102, 121, 0.4);
     .diff-title  { color: #CF6679; }
@@ -227,6 +234,7 @@
   }
 
   &.good-deal {
+    margin: 15px 0;
     background: rgba(76, 175, 80, 0.12);
     border: 1px solid rgba(76, 175, 80, 0.4);
     .diff-title  { color: #4CAF50; }

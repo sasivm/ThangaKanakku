@@ -1,4 +1,4 @@
-<div class="app-shell">
+﻿<div class="app-shell">
 
   <!-- Header -->
   <header class="app-header">
@@ -168,13 +168,16 @@
         <!-- Has calculation -->
         <ng-container *ngIf="calcResult" [formGroup]="bargainForm">
 
-          <!-- Fair price display -->
-          <div class="fair-price-card">
-            <span class="fair-price-label">Your calculated fair price</span>
-            <span class="fair-price-amount">
-              ₹ {{ calcResult.totalPrice | number:'1.2-2' }}
-            </span>
-          </div>
+          <!-- Editable fair price -->
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Your fair price (₹)</mat-label>
+            <input matInput type="number" inputmode="decimal"
+              formControlName="fairPrice" placeholder="e.g. 56000"/>
+            <mat-hint>Auto-filled from Calculate tab. You can edit it.</mat-hint>
+            <mat-error *ngIf="isInvalid(bargainForm,'fairPrice')">
+              Enter fair price
+            </mat-error>
+          </mat-form-field>
 
           <!-- Shop price input -->
           <mat-form-field appearance="fill" class="full-width">
@@ -228,7 +231,7 @@
                 </div>
                 <span class="breakup-amount">
                   ₹ {{ bargainResult.shopPrice | number:'1.2-2' }}
-                </span>
+                  </span>
               </div>
 
               <div class="breakup-row">
@@ -247,6 +250,16 @@
                 </div>
                 <span class="breakup-amount">
                   ₹ {{ bargainResult.impliedMaking | number:'1.2-2' }}
+                </span>
+              </div>
+
+              <div class="breakup-row">
+                <div class="breakup-left">
+                  <span class="breakup-label">Implied making %</span>
+                  <span class="breakup-formula">Percentage of shop price</span>
+                </div>
+                <span class="breakup-amount">
+                  {{ bargainResult.impliedMakingPercent | number:'1.1-1' }}%
                 </span>
               </div>
 

@@ -18,6 +18,7 @@ export interface BargainResult {
   difference:     number;
   isOverpaying:   boolean;
   impliedMaking:  number;
+  impliedMakingPercent: number;
   overchargePercent: number;
   tip: string;
 }
@@ -52,6 +53,7 @@ export class App {
     });
 
     this.bargainForm = this.fb.group({
+      fairPrice: [null, [Validators.required, Validators.min(0)]],
       shopPrice: [null, [Validators.required, Validators.min(1)]],
     });
   }
@@ -102,6 +104,7 @@ export class App {
       gst, totalPrice,
       goldFormula, makingFormula, gstFormula
     };
+    this.bargainForm.patchValue({ fairPrice: totalPrice });
     this.bargainResult = null;
   }
 
@@ -114,11 +117,14 @@ export class App {
     }
 
     const shopPrice  = this.bargainForm.value.shopPrice;
-    const fairPrice  = this.calcResult.totalPrice;
+    const fairPrice  = this.bargainForm.value.fairPrice;
     const difference = shopPrice - fairPrice;
     const isOverpaying      = difference > 0;
-    const impliedMaking     = shopPrice - this.calcResult.goldValue;
-    const overchargePercent = (difference / fairPrice) * 100;
+    const impliedMaking     = shopPrice - this.calcResult.totalPrice;
+    const impliedMakingPercent = shopPrice > 0
+      ? (impliedMaking / shopPrice) * 100
+      : 0;
+    const overchargePercent = (difference / shopPrice) * 100;
 
     const tip = isOverpaying
       ? `Tell them your fair price is ₹${this.fmt(fairPrice)}. ` +
@@ -129,6 +135,7 @@ export class App {
     this.bargainResult = {
       shopPrice, fairPrice, difference,
       isOverpaying, impliedMaking,
+      impliedMakingPercent,
       overchargePercent, tip
     };
   }
