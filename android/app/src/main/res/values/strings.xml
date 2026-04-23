@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ThangaKanakku</string>
+    <string name="title_activity_main">ThangaKanakku</string>
+    <string name="package_name">com.thangakanakku.app</string>
+    <string name="custom_url_scheme">com.thangakanakku.app</string>
+</resources>

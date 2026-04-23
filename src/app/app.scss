@@ -1,0 +1,165 @@
+.app-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.app-header {
+  background: linear-gradient(135deg, #1A1200, #2E2200);
+  border-bottom: 1px solid var(--gold-dark);
+  padding: 22px 16px 18px;
+  text-align: center;
+}
+.header-icon  { color: var(--gold); font-size: 20px; display: block; margin-bottom: 4px; }
+.app-header h1 { color: var(--gold-light); font-size: 22px; font-weight: 700; letter-spacing: 1.5px; }
+.header-sub   { color: var(--gold-dark); font-size: 13px; margin-top: 2px; display: block; }
+
+/* Body */
+.calculator { padding: 20px 16px; flex: 1; }
+
+/* 2 column row */
+.row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.full-width   { width: 100%; margin-bottom: 8px; }
+.field-group  { margin-bottom: 20px; }
+
+/* Segment label */
+.seg-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  color: var(--on-surface2);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* Segment control */
+.seg-control {
+  display: flex;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 3px;
+}
+.seg-control button {
+  flex: 1;
+  padding: 10px 6px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--on-surface2);
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &.active {
+    background: var(--gold);
+    color: #1A1200;
+    font-weight: 700;
+  }
+}
+
+/* GST Toggle row */
+.gst-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 24px;
+}
+.gst-toggle-label  { display: flex; flex-direction: column; gap: 2px; }
+.gst-title         { font-size: 15px; font-weight: 500; color: var(--on-surface); }
+.gst-hint          { font-size: 12px; color: var(--on-surface2); }
+
+/* Buttons */
+.btn-row { display: flex; gap: 10px; margin-bottom: 20px; }
+
+.btn-calc {
+  flex: 2;
+  padding: 16px;
+  background: var(--gold);
+  color: #1A1200;
+  border: none;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+}
+.btn-reset {
+  flex: 1;
+  padding: 16px;
+  background: var(--surface3);
+  color: var(--on-surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Results card */
+.results {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+}
+.results-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+
+/* Breakup rows */
+.breakup-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+
+  &:first-of-type { padding-top: 8px; }
+}
+.breakup-left   { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+.breakup-label  { font-size: 14px; color: var(--on-surface); font-weight: 500; }
+.breakup-formula { font-size: 11px; color: var(--on-surface2); }
+.breakup-right  { padding-left: 12px; }
+.breakup-amount { font-size: 15px; font-weight: 600; color: var(--on-surface); white-space: nowrap; }
+.gst-amount     { color: var(--gold); }
+
+/* Divider */
+.result-divider {
+  height: 1px;
+  background: var(--gold-dark);
+  opacity: 0.4;
+  margin: 8px 0 12px;
+}
+
+/* Total row */
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.total-left   { display: flex; flex-direction: column; gap: 2px; }
+.total-label  { font-size: 16px; font-weight: 600; color: var(--on-surface); }
+.total-hint   { font-size: 11px; color: var(--on-surface2); }
+.total-amount { font-size: 22px; font-weight: 700; color: var(--gold-light); }

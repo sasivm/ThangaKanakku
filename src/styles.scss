@@ -1,0 +1,98 @@
+/* You can add global styles to this file, and also import other style files */
+
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+/* Gold custom palette */
+$gold-palette: (
+  50:  #FBF6E9,
+  100: #F5E9C5,
+  200: #EDDB9E,
+  300: #E5CC76,
+  400: #DEC158,
+  500: #C9962A,
+  600: #B8860B,
+  700: #9A7009,
+  800: #7C5A07,
+  900: #5E4405,
+  contrast: (
+    50: rgba(0,0,0,0.87),
+    100: rgba(0,0,0,0.87),
+    200: rgba(0,0,0,0.87),
+    300: rgba(0,0,0,0.87),
+    400: rgba(0,0,0,0.87),
+    500: rgba(0,0,0,0.87),
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  )
+);
+
+$light-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$violet-palette,
+  )
+));
+
+$dark-theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: mat.$violet-palette,
+  )
+));
+
+html {
+  @include mat.all-component-themes($light-theme);
+  --gold:          #C9962A;
+  --gold-light:    #E8B84B;
+  --gold-dark:     #8B6914;
+  --surface:       #FBF8F2;
+  --surface2:      #F5F0E4;
+  --surface3:      #EDE5D0;
+  --on-surface:    #1A1509;
+  --on-surface2:   #6B5E3E;
+  --border:        #D4C89A;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    @include mat.all-component-themes($dark-theme);
+    --surface:     #1E1A13;
+    --surface2:    #2A2418;
+    --surface3:    #332D1E;
+    --on-surface:  #F0E6CC;
+    --on-surface2: #A89878;
+    --border:      #3D3522;
+  }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--surface);
+  font-family: Roboto, 'Segoe UI', sans-serif;
+}
+
+/* Override Material fill input colors to match gold theme */
+.mat-mdc-form-field.mat-mdc-form-field-type-mat-input .mdc-text-field--filled {
+  background-color: var(--surface2) !important;
+}
+.mat-mdc-form-field .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: var(--surface2) !important;
+}
+.mat-mdc-form-field.mat-focused .mdc-floating-label {
+  color: var(--gold) !important;
+}
+.mat-mdc-slide-toggle  .mdc-switch--checked {
+  color: var(--gold) !important;
+}
+.mat-mdc-form-field.mat-focused .mdc-line-ripple::after {
+  border-bottom-color: var(--gold) !important;
+}
+.mat-mdc-form-field .mdc-line-ripple::before {
+  border-bottom-color: var(--border) !important;
+}
