@@ -5,10 +5,12 @@ export interface CalculationResult {
   grossWeight:    number;
   goldRate:       number;
   wastageGrams:   number;
+  wastagePercent: number;
   totalGrams:     number;
   goldValue:      number;
   wastageValue:   number;
   makingCharge:   number;
+  makingPercent:  number;
   subtotal:       number;
   gst:            number;
   totalPrice:     number;
@@ -102,14 +104,21 @@ export class App {
     const wastageGrams = this.wastageMode === 'percent'
       ? grossWeight * ((wastageValue || 0) / 100)
       : (wastageValue || 0);
-
+    
     const wastageAmt  = wastageGrams * goldRate;
     const totalGrams  = grossWeight + wastageGrams;
+
+    const wastagePercent = grossWeight > 0
+      ? (wastageGrams / grossWeight) * 100
+      : 0;
 
     // 3. Making charge applied on totalGrams (gross + wastage)
     const makingCharge = this.makingMode === 'fixed'
       ? totalGrams  * (makingFixed   || 0)
       : goldValue   * ((makingPercent || 0) / 100);
+    const makingPercentValue = goldValue > 0
+      ? (makingCharge / goldValue) * 100
+      : 0;
 
     // 4. Subtotal = gold + wastage + making
     const subtotal   = goldValue + wastageAmt + makingCharge;
@@ -131,9 +140,9 @@ export class App {
 
     this.calcResult = {
       grossWeight, goldRate,
-      wastageGrams, totalGrams,
+      wastageGrams, wastagePercent, totalGrams,
       goldValue, wastageValue: wastageAmt,
-      makingCharge, subtotal, gst, totalPrice,
+      makingCharge, makingPercent: makingPercentValue, subtotal, gst, totalPrice,
       goldFormula, wastageFormula, makingFormula, gstFormula,
     };
 
@@ -196,5 +205,12 @@ export class App {
       minimumFractionDigits: 0,
       maximumFractionDigits: 3,
     }) + 'g';
+  }
+
+  fmtPercent(n: number): string {
+    return n.toLocaleString('en-IN', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 3,
+    }) + '%';
   }
 }

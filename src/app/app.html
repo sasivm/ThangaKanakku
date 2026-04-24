@@ -140,17 +140,19 @@
           <!-- Weight summary chips -->
           <div class="weight-chips">
             <div class="chip">
-              <span class="chip-label">Gross</span>
+              <span class="chip-label">Gross </span>
               <span class="chip-value">{{ calcResult.grossWeight }}g</span>
             </div>
             <span class="chip-plus">+</span>
             <div class="chip wastage-chip">
-              <span class="chip-label">Wastage</span>
-              <span class="chip-value">{{ fmtG(calcResult.wastageGrams) }}</span>
+              <span class="chip-label">Wastage </span>
+              <span class="chip-value">
+                {{ fmtG(calcResult.wastageGrams) }} / {{ fmtPercent(calcResult.wastagePercent) }}
+              </span>
             </div>
             <span class="chip-plus">=</span>
             <div class="chip total-chip">
-              <span class="chip-label">Total</span>
+              <span class="chip-label">Total </span>
               <span class="chip-value">{{ fmtG(calcResult.totalGrams) }}</span>
             </div>
           </div>
@@ -172,9 +174,7 @@
               <span class="breakup-label">
                 Wastage
                 <span class="row-tag">
-                  {{ wastageMode === 'percent'
-                    ? (calcForm.get('wastageValue')?.value || 0) + '%'
-                    : fmtG(calcResult.wastageGrams) }}
+                  {{ fmtG(calcResult.wastageGrams) }} / {{ fmtPercent(calcResult.wastagePercent) }}
                 </span>
               </span>
               <span class="breakup-formula">{{ calcResult.wastageFormula }}</span>
@@ -187,7 +187,12 @@
           <!-- Making charge row -->
           <div class="breakup-row">
             <div class="breakup-left">
-              <span class="breakup-label">Making charge</span>
+              <span class="breakup-label">
+                Making charge
+                <span class="row-tag">
+                  {{ fmtPercent(calcResult.makingPercent) }}
+                </span>
+              </span>
               <span class="breakup-formula">{{ calcResult.makingFormula }}</span>
             </div>
             <span class="breakup-amount">
@@ -266,11 +271,13 @@
               <span>₹ {{ calcResult.goldValue | number:'1.2-2' }}</span>
             </div>
             <div class="mini-row wastage-mini">
-              <span>Wastage ({{ fmtG(calcResult.wastageGrams) }})</span>
+              <span>
+                Wastage ({{ fmtG(calcResult.wastageGrams) }} / {{ fmtPercent(calcResult.wastagePercent) }})
+              </span>
               <span>₹ {{ calcResult.wastageValue | number:'1.2-2' }}</span>
             </div>
             <div class="mini-row">
-              <span>Making charge</span>
+              <span>Making charge ({{ fmtPercent(calcResult.makingPercent) }})</span>
               <span>₹ {{ calcResult.makingCharge | number:'1.2-2' }}</span>
             </div>
             <div class="mini-row" *ngIf="includeGst">
