@@ -134,33 +134,40 @@
         </div>
 
         <!-- ── Price Breakup ── -->
-        <div class="results-card" *ngIf="calcResult">
-          <div class="card-title">Price Breakup</div>
-
-          <!-- Weight summary chips -->
-          <div class="weight-chips">
-            <div class="chip">
-              <span class="chip-label">Gross </span>
-              <span class="chip-value">{{ calcResult.grossWeight }}g</span>
+        <div class="results-card price-breakup-card" *ngIf="calcResult">
+          <div class="price-breakup-header">
+            <div>
+              <div class="card-title">Price Breakup</div>
+              <div class="card-subtitle">Simple view of what makes up your price</div>
             </div>
-            <span class="chip-plus">+</span>
-            <div class="chip wastage-chip">
-              <span class="chip-label">Wastage </span>
-              <span class="chip-value">
-                {{ fmtG(calcResult.wastageGrams) }} / {{ fmtPercent(calcResult.wastagePercent) }}
-              </span>
-            </div>
-            <span class="chip-plus">=</span>
-            <div class="chip total-chip">
-              <span class="chip-label">Total </span>
-              <span class="chip-value">{{ fmtG(calcResult.totalGrams) }}</span>
+            <div class="price-total-pill">
+              <span class="price-total-label">{{ includeGst ? 'Final price' : 'Price now' }}</span>
+              <span class="price-total-value">₹ {{ calcResult.totalPrice | number:'1.0-0' }}</span>
             </div>
           </div>
 
-          <!-- Gold value row -->
+          <div class="weight-summary-grid">
+            <div class="weight-stat">
+              <span class="weight-stat-label">Net Gold weight</span>
+              <span class="weight-stat-value">{{ fmtG(calcResult.grossWeight) }}</span>
+            </div>
+            <div class="weight-stat highlight">
+              <span class="weight-stat-label">Wastage added</span>
+              <span class="weight-stat-value">{{ fmtG(calcResult.wastageGrams) }}</span>
+              <span class="weight-stat-note">{{ fmtPercent(calcResult.wastagePercent) }}</span>
+            </div>
+            <div class="weight-stat">
+              <span class="weight-stat-label">Chargeable weight</span>
+              <span class="weight-stat-value">{{ fmtG(calcResult.totalGrams) }}</span>
+            </div>
+          </div>
+
+          <div class="breakup-section-title">Cost details</div>
+
           <div class="breakup-row">
             <div class="breakup-left">
-              <span class="breakup-label">Gold value</span>
+              <span class="breakup-label">Gold cost</span>
+              <span class="breakup-meta">Main gold value from your entered weight</span>
               <span class="breakup-formula">{{ calcResult.goldFormula }}</span>
             </div>
             <span class="breakup-amount">
@@ -168,31 +175,23 @@
             </span>
           </div>
 
-          <!-- Wastage row — before making charge -->
-          <div class="breakup-row wastage-row">
+          <div class="breakup-row">
             <div class="breakup-left">
-              <span class="breakup-label">
-                Wastage
-                <span class="row-tag">
-                  {{ fmtG(calcResult.wastageGrams) }} / {{ fmtPercent(calcResult.wastagePercent) }}
-                </span>
+              <span class="breakup-label">Wastage cost</span>
+              <span class="breakup-meta">
+                Extra gold for wastage: {{ fmtG(calcResult.wastageGrams) }} at {{ fmtPercent(calcResult.wastagePercent) }}
               </span>
               <span class="breakup-formula">{{ calcResult.wastageFormula }}</span>
             </div>
-            <span class="breakup-amount wastage-amt">
+            <span class="breakup-amount">
               ₹ {{ calcResult.wastageValue | number:'1.2-2' }}
             </span>
           </div>
 
-          <!-- Making charge row -->
           <div class="breakup-row">
             <div class="breakup-left">
-              <span class="breakup-label">
-                Making charge
-                <span class="row-tag">
-                  {{ fmtPercent(calcResult.makingPercent) }}
-                </span>
-              </span>
+              <span class="breakup-label">Making charge</span>
+              <span class="breakup-meta">Labour and design charge at {{ fmtPercent(calcResult.makingPercent) }}</span>
               <span class="breakup-formula">{{ calcResult.makingFormula }}</span>
             </div>
             <span class="breakup-amount">
@@ -200,21 +199,20 @@
             </span>
           </div>
 
-          <!-- Subtotal row -->
-          <div class="breakup-row">
+          <div class="breakup-row subtotal-row">
             <div class="breakup-left">
               <span class="breakup-label">Subtotal</span>
-              <span class="breakup-formula">Gold + Wastage + Making</span>
+              <span class="breakup-meta">Gold cost + wastage cost + making charge</span>
             </div>
             <span class="breakup-amount">
               ₹ {{ calcResult.subtotal | number:'1.2-2' }}
             </span>
           </div>
 
-          <!-- GST row -->
-          <div class="breakup-row" *ngIf="includeGst">
+          <div class="breakup-row gst-row" *ngIf="includeGst">
             <div class="breakup-left">
-              <span class="breakup-label">GST (3%)</span>
+              <span class="breakup-label">GST added</span>
+              <span class="breakup-meta">3% tax on the subtotal</span>
               <span class="breakup-formula">{{ calcResult.gstFormula }}</span>
             </div>
             <span class="breakup-amount gst-amount">
@@ -222,12 +220,10 @@
             </span>
           </div>
 
-          <div class="result-divider"></div>
-
-          <!-- Total -->
-          <div class="total-row">
+          <div class="price-breakup-footer">
             <div class="total-left">
-              <span class="total-label">Your fair price</span>
+              <span class="total-label">Amount you can expect to pay</span>
+              <span class="total-hint" *ngIf="includeGst">GST included</span>
               <span class="total-hint" *ngIf="!includeGst">GST not included</span>
             </div>
             <span class="total-amount">
@@ -267,12 +263,12 @@
           <!-- Quick breakup summary -->
           <div class="mini-breakup">
             <div class="mini-row">
-              <span>Gold ({{ calcResult.grossWeight }}g)</span>
+              <span>Gold cost ({{ calcResult.grossWeight }}g)</span>
               <span>₹ {{ calcResult.goldValue | number:'1.2-2' }}</span>
             </div>
             <div class="mini-row wastage-mini">
               <span>
-                Wastage ({{ fmtG(calcResult.wastageGrams) }} / {{ fmtPercent(calcResult.wastagePercent) }})
+                Wastage cost ({{ fmtG(calcResult.wastageGrams) }} / {{ fmtPercent(calcResult.wastagePercent) }})
               </span>
               <span>₹ {{ calcResult.wastageValue | number:'1.2-2' }}</span>
             </div>

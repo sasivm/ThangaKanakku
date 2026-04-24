@@ -196,6 +196,100 @@
   color: var(--gold);
   margin-bottom: 4px;
 }
+.card-subtitle {
+  font-size: 13px;
+  color: var(--on-surface2);
+  line-height: 1.4;
+}
+
+.price-breakup-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.price-breakup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.price-total-pill {
+  min-width: 124px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.18), rgba(212, 175, 55, 0.08));
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.price-total-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--on-surface2);
+}
+
+.price-total-value {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--gold-light);
+  line-height: 1;
+}
+
+.weight-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.weight-stat {
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &.highlight {
+    border-color: rgba(212, 175, 55, 0.35);
+    background: linear-gradient(180deg, rgba(212, 175, 55, 0.14), rgba(255, 255, 255, 0.01));
+  }
+}
+
+.weight-stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--on-surface2);
+}
+
+.weight-stat-value {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--on-surface);
+}
+
+.weight-stat-note {
+  font-size: 12px;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.breakup-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--on-surface2);
+}
 
 // ── Breakup rows ───────────────────────────────────
 .breakup-row {
@@ -206,17 +300,31 @@
   border-bottom: 1px solid var(--border);
   &:last-child { border-bottom: none; }
 }
-.breakup-left    { display: flex; flex-direction: column; gap: 3px; flex: 1; }
-.breakup-label   { font-size: 14px; color: var(--on-surface); font-weight: 500; }
-.breakup-formula { font-size: 11px; color: var(--on-surface2); }
-.breakup-amount  { font-size: 15px; font-weight: 600; color: var(--on-surface); white-space: nowrap; padding-left: 12px; }
+.breakup-left    { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.breakup-label   { font-size: 15px; color: var(--on-surface); font-weight: 600; }
+.breakup-meta    { font-size: 12px; color: var(--on-surface); opacity: 0.82; line-height: 1.45; }
+.breakup-formula { font-size: 11px; color: var(--on-surface2); line-height: 1.45; }
+.breakup-amount  { font-size: 16px; font-weight: 700; color: var(--on-surface); white-space: nowrap; padding-left: 12px; }
 .gst-amount      { color: var(--gold); }
 
-.result-divider {
-  height: 1px;
-  background: var(--gold-dark);
-  opacity: 0.4;
-  margin: 8px 0 12px;
+.subtotal-row .breakup-label,
+.subtotal-row .breakup-amount {
+  color: var(--gold-light);
+}
+
+.gst-row {
+  border-bottom: none;
+}
+
+.price-breakup-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: rgba(212, 175, 55, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  border-radius: 14px;
+  padding: 14px 16px;
 }
 
 .total-row    { display: flex; justify-content: space-between; align-items: center; }
@@ -307,4 +415,24 @@
 
 .weight-chips {
   color: var(--on-surface2);
+}
+
+@media (max-width: 480px) {
+  .price-breakup-header {
+    flex-direction: column;
+  }
+
+  .price-total-pill {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  // .weight-summary-grid {
+  //   // grid-template-columns: 1fr;
+  // }
+
+  .price-breakup-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }
