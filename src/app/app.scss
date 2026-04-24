@@ -114,6 +114,36 @@
   --mdc-switch-selected-hover-handle-color:   #1A1200 !important;
   --mdc-switch-selected-pressed-handle-color: #1A1200 !important;
   --mdc-switch-selected-focus-handle-color:   #1A1200 !important;
+  --mdc-switch-unselected-track-color:        var(--surface3) !important;
+  --mdc-switch-unselected-hover-track-color:  var(--surface3) !important;
+  --mdc-switch-unselected-pressed-track-color: var(--surface3) !important;
+  --mdc-switch-unselected-focus-track-color:  var(--surface3) !important;
+  --mdc-switch-unselected-handle-color:       var(--gold-dark) !important;
+  --mdc-switch-unselected-hover-handle-color: var(--gold-dark) !important;
+  --mdc-switch-unselected-pressed-handle-color: var(--gold-dark) !important;
+  --mdc-switch-unselected-focus-handle-color: var(--gold-dark) !important;
+}
+
+::ng-deep .gold-toggle .mdc-switch__track::before {
+  background: var(--surface3) !important;
+  border-color: var(--border) !important;
+}
+
+::ng-deep .gold-toggle .mdc-switch__track::after {
+  background: var(--gold) !important;
+  border-color: var(--gold) !important;
+}
+
+::ng-deep .gold-toggle .mdc-switch__handle-track {
+  color: var(--gold-dark) !important;
+}
+
+::ng-deep .gold-toggle .mdc-switch--selected .mdc-switch__handle-track {
+  color: #1A1200 !important;
+}
+
+::ng-deep .gold-toggle .mdc-switch__shadow {
+  opacity: 0.18;
 }
 
 // ── Buttons ────────────────────────────────────────

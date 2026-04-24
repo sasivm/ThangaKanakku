@@ -1,18 +1,14 @@
 ﻿<div class="app-shell">
 
-  <!-- Header -->
   <header class="app-header">
     <span class="header-icon">✦</span>
-    <h1>Thanga Kanakku</h1>
+    <h1>ThangaKanakku</h1>
     <span class="header-sub">தங்கக் கணக்கு</span>
   </header>
 
-  <!-- Tab bar -->
-  <mat-tab-group
-    animationDuration="200ms"
-    class="gold-tabs">
+  <mat-tab-group animationDuration="200ms" class="gold-tabs">
 
-    <!-- ────────── TAB 1: CALCULATE ────────── -->
+    <!-- ══════════ TAB 1 — CALCULATE ══════════ -->
     <mat-tab>
       <ng-template mat-tab-label>
         <span class="tab-label">🧮 Calculate</span>
@@ -20,11 +16,12 @@
 
       <div class="tab-body" [formGroup]="calcForm">
 
+        <!-- Weight + Rate -->
         <div class="row-2">
           <mat-form-field appearance="fill" class="full-width">
             <mat-label>Gold weight (g)</mat-label>
             <input matInput type="number" inputmode="decimal"
-              formControlName="grossWeight" placeholder="e.g. 8.500"/>
+              formControlName="grossWeight" placeholder="e.g. 10"/>
             <mat-error *ngIf="isInvalid(calcForm,'grossWeight')">
               Enter valid weight
             </mat-error>
@@ -40,7 +37,51 @@
           </mat-form-field>
         </div>
 
-        <!-- Making type -->
+        <!-- ── Wastage section ── -->
+        <div class="section-head">
+          <span class="section-title">Wastage</span>
+          <span class="section-line"></span>
+        </div>
+
+        <div class="field-group">
+          <span class="seg-label">Wastage type</span>
+          <div class="seg-control">
+            <button type="button" matRipple
+              [class.active]="wastageMode === 'percent'"
+              (click)="setWastageMode('percent')">
+              % of weight
+            </button>
+            <button type="button" matRipple
+              [class.active]="wastageMode === 'grams'"
+              (click)="setWastageMode('grams')">
+              Grams
+            </button>
+          </div>
+        </div>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>
+            {{ wastageMode === 'percent' ? 'Wastage (% of gross weight)' : 'Wastage (grams)' }}
+          </mat-label>
+          <input matInput type="number" inputmode="decimal"
+            formControlName="wastageValue"
+            [placeholder]="wastageMode === 'percent' ? 'e.g. 2' : 'e.g. 0.200'"/>
+          <mat-hint>
+            <span *ngIf="wastageMode === 'percent'">
+              Adds extra grams: weight × wastage%
+            </span>
+            <span *ngIf="wastageMode === 'grams'">
+              Direct wastage in grams
+            </span>
+          </mat-hint>
+        </mat-form-field>
+
+        <!-- ── Making charge section ── -->
+        <div class="section-head" style="margin-top: 8px">
+          <span class="section-title">Making Charge</span>
+          <span class="section-line"></span>
+        </div>
+
         <div class="field-group">
           <span class="seg-label">Making charge type</span>
           <div class="seg-control">
@@ -62,6 +103,7 @@
           <mat-label>Making charge (₹ per gram)</mat-label>
           <input matInput type="number" inputmode="decimal"
             formControlName="makingFixed" placeholder="e.g. 450"/>
+          <mat-hint>Applied on gross + wastage grams</mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="full-width"
@@ -69,19 +111,19 @@
           <mat-label>Making charge (%)</mat-label>
           <input matInput type="number" inputmode="decimal"
             formControlName="makingPercent" placeholder="e.g. 12"/>
+          <mat-hint>Applied on gold value</mat-hint>
         </mat-form-field>
 
-        <!-- GST toggle -->
+        <!-- ── GST toggle ── -->
         <div class="gst-toggle-row">
           <div class="gst-toggle-label">
             <span class="gst-title">Include GST</span>
-            <span class="gst-hint">3% on gold + making</span>
+            <span class="gst-hint">3% on gold + wastage + making</span>
           </div>
-          <mat-slide-toggle formControlName="includeGst"
-            class="gold-toggle">
-          </mat-slide-toggle>
+          <mat-slide-toggle formControlName="includeGst" class="gold-toggle"/>
         </div>
 
+        <!-- Buttons -->
         <div class="btn-row">
           <button class="btn-calc" type="button" matRipple (click)="calculate()">
             Calculate
@@ -91,10 +133,29 @@
           </button>
         </div>
 
-        <!-- Price breakup -->
+        <!-- ── Price Breakup ── -->
         <div class="results-card" *ngIf="calcResult">
           <div class="card-title">Price Breakup</div>
 
+          <!-- Weight summary chips -->
+          <div class="weight-chips">
+            <div class="chip">
+              <span class="chip-label">Gross</span>
+              <span class="chip-value">{{ calcResult.grossWeight }}g</span>
+            </div>
+            <span class="chip-plus">+</span>
+            <div class="chip wastage-chip">
+              <span class="chip-label">Wastage</span>
+              <span class="chip-value">{{ fmtG(calcResult.wastageGrams) }}</span>
+            </div>
+            <span class="chip-plus">=</span>
+            <div class="chip total-chip">
+              <span class="chip-label">Total</span>
+              <span class="chip-value">{{ fmtG(calcResult.totalGrams) }}</span>
+            </div>
+          </div>
+
+          <!-- Gold value row -->
           <div class="breakup-row">
             <div class="breakup-left">
               <span class="breakup-label">Gold value</span>
@@ -105,6 +166,25 @@
             </span>
           </div>
 
+          <!-- Wastage row — before making charge -->
+          <div class="breakup-row wastage-row">
+            <div class="breakup-left">
+              <span class="breakup-label">
+                Wastage
+                <span class="row-tag">
+                  {{ wastageMode === 'percent'
+                    ? (calcForm.get('wastageValue')?.value || 0) + '%'
+                    : fmtG(calcResult.wastageGrams) }}
+                </span>
+              </span>
+              <span class="breakup-formula">{{ calcResult.wastageFormula }}</span>
+            </div>
+            <span class="breakup-amount wastage-amt">
+              ₹ {{ calcResult.wastageValue | number:'1.2-2' }}
+            </span>
+          </div>
+
+          <!-- Making charge row -->
           <div class="breakup-row">
             <div class="breakup-left">
               <span class="breakup-label">Making charge</span>
@@ -115,16 +195,18 @@
             </span>
           </div>
 
+          <!-- Subtotal row -->
           <div class="breakup-row">
             <div class="breakup-left">
               <span class="breakup-label">Subtotal</span>
-              <span class="breakup-formula">Gold + Making</span>
+              <span class="breakup-formula">Gold + Wastage + Making</span>
             </div>
             <span class="breakup-amount">
               ₹ {{ calcResult.subtotal | number:'1.2-2' }}
             </span>
           </div>
 
+          <!-- GST row -->
           <div class="breakup-row" *ngIf="includeGst">
             <div class="breakup-left">
               <span class="breakup-label">GST (3%)</span>
@@ -137,13 +219,14 @@
 
           <div class="result-divider"></div>
 
+          <!-- Total -->
           <div class="total-row">
             <div class="total-left">
               <span class="total-label">Your fair price</span>
               <span class="total-hint" *ngIf="!includeGst">GST not included</span>
             </div>
             <span class="total-amount">
-              ₹ {{ calcResult.totalPrice | number:'1.2-2' }}
+              ₹ {{ calcResult.totalPrice | number:'1.0-0' }}
             </span>
           </div>
         </div>
@@ -151,7 +234,7 @@
       </div>
     </mat-tab>
 
-    <!-- ────────── TAB 2: BARGAIN ────────── -->
+    <!-- ══════════ TAB 2 — BARGAIN ══════════ -->
     <mat-tab>
       <ng-template mat-tab-label>
         <span class="tab-label">🤝 Bargain</span>
@@ -159,31 +242,48 @@
 
       <div class="tab-body">
 
-        <!-- No calculation yet -->
         <div class="no-calc-msg" *ngIf="!calcResult">
           <span class="no-calc-icon">🧮</span>
-          <p>Calculate your fair price first in the <strong>Calculate</strong> tab</p>
+          <p>Calculate your fair price first in the
+            <strong>Calculate</strong> tab
+          </p>
         </div>
 
-        <!-- Has calculation -->
         <ng-container *ngIf="calcResult" [formGroup]="bargainForm">
 
-          <!-- Editable fair price -->
-          <mat-form-field appearance="fill" class="full-width">
-            <mat-label>Your fair price (₹)</mat-label>
-            <input matInput type="number" inputmode="decimal"
-              formControlName="fairPrice" placeholder="e.g. 56000"/>
-            <mat-hint>Auto-filled from Calculate tab. You can edit it.</mat-hint>
-            <mat-error *ngIf="isInvalid(bargainForm,'fairPrice')">
-              Enter fair price
-            </mat-error>
-          </mat-form-field>
+          <!-- Fair price banner -->
+          <div class="fair-price-card">
+            <span class="fair-price-label">Your calculated fair price</span>
+            <span class="fair-price-amount">
+              ₹ {{ calcResult.totalPrice | number:'1.2-2' }}
+            </span>
+          </div>
+
+          <!-- Quick breakup summary -->
+          <div class="mini-breakup">
+            <div class="mini-row">
+              <span>Gold ({{ calcResult.grossWeight }}g)</span>
+              <span>₹ {{ calcResult.goldValue | number:'1.2-2' }}</span>
+            </div>
+            <div class="mini-row wastage-mini">
+              <span>Wastage ({{ fmtG(calcResult.wastageGrams) }})</span>
+              <span>₹ {{ calcResult.wastageValue | number:'1.2-2' }}</span>
+            </div>
+            <div class="mini-row">
+              <span>Making charge</span>
+              <span>₹ {{ calcResult.makingCharge | number:'1.2-2' }}</span>
+            </div>
+            <div class="mini-row" *ngIf="includeGst">
+              <span>GST (3%)</span>
+              <span>₹ {{ calcResult.gst | number:'1.2-2' }}</span>
+            </div>
+          </div>
 
           <!-- Shop price input -->
           <mat-form-field appearance="fill" class="full-width">
             <mat-label>Shopkeeper's quoted price (₹)</mat-label>
             <input matInput type="number" inputmode="decimal"
-              formControlName="shopPrice" placeholder="e.g. 58000"/>
+              formControlName="shopPrice" placeholder="e.g. 72000"/>
             <mat-error *ngIf="isInvalid(bargainForm,'shopPrice')">
               Enter shop price
             </mat-error>
@@ -197,11 +297,10 @@
           <!-- Bargain result -->
           <ng-container *ngIf="bargainResult">
 
-            <!-- Difference card -->
+            <!-- Diff card -->
             <div class="diff-card"
               [class.overpaying]="bargainResult.isOverpaying"
               [class.good-deal]="!bargainResult.isOverpaying">
-
               <div class="diff-header">
                 <span class="diff-icon">
                   {{ bargainResult.isOverpaying ? '⚠️' : '✅' }}
@@ -210,9 +309,8 @@
                   {{ bargainResult.isOverpaying ? 'YOU ARE OVERPAYING' : 'GOOD DEAL!' }}
                 </span>
               </div>
-
               <div class="diff-amount">
-                ₹ {{ (bargainResult.difference | number:'1.2-2') }}
+                ₹ {{ bargainResult.difference | number:'1.2-2' }}
               </div>
               <div class="diff-sub">
                 {{ bargainResult.isOverpaying
@@ -231,7 +329,7 @@
                 </div>
                 <span class="breakup-amount">
                   ₹ {{ bargainResult.shopPrice | number:'1.2-2' }}
-                  </span>
+                </span>
               </div>
 
               <div class="breakup-row">
@@ -246,20 +344,12 @@
               <div class="breakup-row">
                 <div class="breakup-left">
                   <span class="breakup-label">Implied making charge</span>
-                  <span class="breakup-formula">Shop price − gold value</span>
+                  <span class="breakup-formula">
+                    Shop price − gold − wastage
+                  </span>
                 </div>
                 <span class="breakup-amount">
                   ₹ {{ bargainResult.impliedMaking | number:'1.2-2' }}
-                </span>
-              </div>
-
-              <div class="breakup-row">
-                <div class="breakup-left">
-                  <span class="breakup-label">Implied making %</span>
-                  <span class="breakup-formula">Percentage of shop price</span>
-                </div>
-                <span class="breakup-amount">
-                  {{ bargainResult.impliedMakingPercent | number:'1.1-1' }}%
                 </span>
               </div>
 
@@ -293,5 +383,4 @@
     </mat-tab>
 
   </mat-tab-group>
-
 </div>
